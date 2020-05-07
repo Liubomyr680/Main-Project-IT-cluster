@@ -46,12 +46,12 @@ public class SignUpController extends HttpServlet {
         String login = request.getParameter("login");
         String password = request.getParameter("password");
 
-        if(login.equals(registrationController.userList.get(0).getUserName()) && password.equals(registrationController.userList.get(0).getPassword())){
-            response.sendRedirect(request.getContextPath()+ "/template");
-        }else{
-
+        for(User finder : registrationController.userList){
+            if(login.equals(finder.getUserName()) && password.equals(finder.getPassword()))
+                response.sendRedirect(request.getContextPath()+ "/template");
         }
         //нижче має іти перевірка з базою даних користувачів
+
 
 
     }
