@@ -71,4 +71,9 @@ public class TemplateController extends HttpServlet {
         );
         response.getWriter().println(homeHtml.render());
     }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+
+
+    }
 }

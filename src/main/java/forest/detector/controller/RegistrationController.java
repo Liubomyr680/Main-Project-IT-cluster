@@ -1,6 +1,6 @@
 package forest.detector.controller;
 
-import forest.detector.entity.User;
+import forest.detector.entity.PasswordHashing;
 import forest.detector.repository.UserRepository;
 
 import javax.servlet.ServletException;
@@ -10,18 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @WebServlet(name = "registration", urlPatterns = "/registration")
 public class RegistrationController extends HttpServlet {
-    List<User> userList = UserRepository.getInstance().getUsers();
+
+    private UserRepository userRepository = new UserRepository();
+    private PasswordHashing hashing = new PasswordHashing();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter writer = response.getWriter();
-        //List<User> userList = UserRepository.getInstance().getUsers();
-
         String html = "<html><body>";
 
         html+=  "<center>"+
@@ -29,14 +28,14 @@ public class RegistrationController extends HttpServlet {
                 "  <div class='container'>" +
                 "  <center>  <h1> User Registration Form</h1> </center>" +
                 "  <hr>" +
-                "  <label> First name </label><br>" +
-                "<input type='text' name='firstName' placeholder= 'First name' size='15' required /><br> <br>" +
-                "<label> Second Name: </label><br>" +
-                "<input type='text' name='secondName' placeholder='Second name' size='15' required /><br> <br>" +
-                "<label> Username: </label><br>" +
-                "<input type='text' name='username' placeholder='User name' size='15'required /><br> <br>" +
+                "  <label> Email </label><br>" +
+                "<input type='text' name='email' placeholder= 'Email' size='15' required /><br> <br>" +
                 "<label> Password: </label><br>" +
-                "<input type='password' name='password' placeholder='Password' size='15'required /><br> <br>" +
+                "<input type='password' name='password' placeholder='Password' size='15' required /><br> <br>" +
+                "<label> First name: </label><br>" +
+                "<input type='text' name='firstName' placeholder='First name' size='15'required /><br> <br>" +
+                "<label> Last name: </label><br>" +
+                "<input type='text' name='lastName' placeholder='Last name' size='15'required /><br> <br>" +
                 "</div>" +
                 "<input type='submit' value='Confirm'>"+
                 "</center>"+
@@ -44,21 +43,36 @@ public class RegistrationController extends HttpServlet {
                 "</body></html>";
 
         writer.println(html);
-
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("secondName");
-        String userName = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        if(!firstName.equals("") && !lastName.equals("") && !userName.equals("")){
-            userList.add(new User(firstName,lastName,userName,password));
-            response.sendRedirect(request.getContextPath()+ "/login");
-        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         doGet(request,response);
+        PrintWriter writer = response.getWriter();
+
+        String html = "<html><body>";
+
+        String email = request.getParameter("email");
+        String password = null;
+
+        password = hashing.getHash(request.getParameter("password"));
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+
+        if(email.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9+])*(\\.[A-Za-z]{2,})$")){
+
+            userRepository.setUserInDB(email,password,firstName,lastName);
+            response.sendRedirect(request.getContextPath()+ "/login");
+
+        }else{
+            html += "<center>"+
+                    "<h3 style=\"color:#FF0000\";>Wrong email</h3>" +
+                    "<h3 style=\"color:#FF0000\";>please try again</h3>" +
+                    "<center>";
+            html += "</body></html>";
+            writer.println(html);
+        }
+
     }
 }
