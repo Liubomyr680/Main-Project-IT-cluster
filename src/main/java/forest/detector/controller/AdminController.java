@@ -43,7 +43,6 @@ public class AdminController extends HttpServlet {
         PrintWriter writer = response.getWriter();
         UserRepository userRepository = new UserRepository();
 
-        //String role = "";
         String email = request.getParameter("email");
 
         String html = "<html><body>";
@@ -52,27 +51,24 @@ public class AdminController extends HttpServlet {
             User user = userRepository.getUserByEmail(email);
             if(user != null){
                 html+=  "<center>"+
-                        "<form name='select' method='get' action ='/select'>" +
-                        "<select name='select'>" +
-                        "<option value='one'>one</option>" +
-                        "<option value='two'>two</option>" +
+                        "<form method ='post' action='/admin'>"+
+                        "<input type='text' name ='role' placeholder='Role'>"+
                         "<input type='submit' value='submit'>" +
                         "</center>"+
                         "</form>"+
                         "</body></html>";
-                String role = request.getParameter("email");
-                writer.println(role);
+
 
             } else {
 
-
-
-//                userRepository.updateUserRoleInDB(role,email);
 
                 response.sendRedirect("/admin");
             }
 
         }
+
+        String role = request.getParameter("role");
+        userRepository.updateUserRoleInDB(role,email);
 
 
 
