@@ -1,6 +1,7 @@
 package forest.detector.controller;
 
-import forest.detector.entity.PasswordHashing;
+import forest.detector.service.UserService;
+import forest.detector.utils.PasswordHashing;
 import forest.detector.repository.UserRepository;
 
 import javax.servlet.ServletException;
@@ -8,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -15,7 +17,8 @@ import java.io.PrintWriter;
 @WebServlet(name = "registration", urlPatterns = "/registration")
 public class RegistrationController extends HttpServlet {
 
-    private UserRepository userRepository = new UserRepository();
+    //private UserRepository userRepository;
+    private UserService userService;
     private PasswordHashing hashing = new PasswordHashing();
 
     @Override
@@ -60,9 +63,13 @@ public class RegistrationController extends HttpServlet {
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
 
+        if (userService == null) {
+            userService = new UserService((DataSource) request.getServletContext().getAttribute("datasource"));
+        }
+
         if(email.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9+])*(\\.[A-Za-z]{2,})$")){
 
-            userRepository.setUserInDB(email,password,firstName,lastName);
+            userService.setUserInDB(email,password,firstName,lastName);
             response.sendRedirect(request.getContextPath()+ "/login");
 
         }else{
@@ -73,6 +80,5 @@ public class RegistrationController extends HttpServlet {
             html += "</body></html>";
             writer.println(html);
         }
-
     }
 }

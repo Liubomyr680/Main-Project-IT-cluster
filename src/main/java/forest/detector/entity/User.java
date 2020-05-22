@@ -2,8 +2,6 @@ package forest.detector.entity;
 
 public class User {
 
-
-    private long id;
     private String email;
     private String password;
     private String firstName;
@@ -13,21 +11,12 @@ public class User {
     public User() {
     }
 
-    public User(long id, String email, String password, String firstName, String lastName, String role) {
-        this.id = id;
+    public User(String email, String password, String firstName, String lastName, String role) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getEmail() {
@@ -73,7 +62,6 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +

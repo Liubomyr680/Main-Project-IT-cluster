@@ -1,64 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.heroku.sample</groupId>
+    <packaging>jar</packaging>
+
+    <name>java-project-template</name>
+
+    <groupId>org.itcluster</groupId>
     <artifactId>itcluster-java9</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <url>http://maven.apache.org</url>
+
     <properties>
         <tomcat.version>9.0.34</tomcat.version>
         <jetty.version>9.4.26.v20200117</jetty.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-
-
-
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-jul</artifactId>
-            <version>2.13.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.13.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.j2html</groupId>
-            <artifactId>j2html</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.6.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.20</version>
-        </dependency>
-
-    </dependencies>
     <build>
-        <finalName>itcluster-java9</finalName>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -66,9 +25,12 @@
                 <version>2.0.0</version>
                 <configuration>
                     <assembleDirectory>target</assembleDirectory>
+                    <extraJvmArguments>
+                        -javaagent:target/newrelic/newrelic.jar
+                    </extraJvmArguments>
                     <programs>
                         <program>
-                            <mainClass>forest.detector.Launcher</mainClass>
+                            <mainClass>org.example.Launcher</mainClass>
                             <name>webapp</name>
                         </program>
                     </programs>
@@ -82,21 +44,14 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- https://github.com/heroku/heroku-maven-plugin -->
             <plugin>
                 <groupId>com.heroku.sdk</groupId>
                 <artifactId>heroku-maven-plugin</artifactId>
                 <version>3.0.2</version>
                 <configuration>
                     <jdkVersion>11</jdkVersion>
-                    <appName>itcluster-java9</appName>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <appName>java-project-template</appName>
                 </configuration>
             </plugin>
             <plugin>
@@ -141,11 +96,79 @@
                 </configuration>
             </plugin>
             <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <!-- Can't properly copy *.jar files: increased size and broke inner structure -->
+            <!--            <plugin>-->
+            <!--                <artifactId>maven-resources-plugin</artifactId>-->
+            <!--                <version>3.1.0</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>copy-resources</id>-->
+            <!--                        <phase>process-resources</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>copy-resources</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <encoding>UTF-8</encoding>-->
+            <!--                            <overwrite>true</overwrite>-->
+            <!--                            <outputDirectory>-->
+            <!--                                ${basedir}/target/newrelic-->
+            <!--                            </outputDirectory>-->
+            <!--                            <resources>-->
+            <!--                                <resource>-->
+            <!--                                    <directory>newrelic</directory>-->
+            <!--                                    <filtering>true</filtering>-->
+            <!--                                    <includes>-->
+            <!--                                        <include>**/*.jar</include>-->
+            <!--                                    </includes>-->
+            <!--                                </resource>-->
+            <!--                            </resources>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-antrun-plugin</artifactId>-->
+<!--                <version>3.0.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>copy-dependencies</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>run</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <target>-->
+<!--                                <mkdir dir="target/newrelic"/>-->
+<!--                                <copy todir="target/newrelic">-->
+<!--                                    <fileset dir="newrelic"/>-->
+<!--                                </copy>-->
+<!--                            </target>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.1</version>
                 <configuration>
                     <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
             </plugin>
         </plugins>
         <resources>
@@ -158,6 +181,71 @@
         </resources>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <version>${tomcat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jul</artifactId>
+            <version>2.13.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.13.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.12</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.4.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.j2html</groupId>
+            <artifactId>j2html</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.newrelic.agent.java</groupId>
+            <artifactId>newrelic-java</artifactId>
+            <version>5.12.1</version>
+            <scope>provided</scope>
+            <type>zip</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.6.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>13.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
     <profiles>
         <profile>
             <id>sonar</id>
@@ -166,10 +254,12 @@
             </activation>
             <properties>
                 <sonar.host.url>https://sonarcloud.io/</sonar.host.url>
-                <sonar.organization>mentorshipprojects</sonar.organization>
+                <sonar.organization>serhiikartashov</sonar.organization>
+                <!--suppress UnresolvedMavenProperty -->
                 <sonar.login>${env.SONAR_TOKEN}</sonar.login>
                 <sonar.coverage.exclusions>**/*Launcher.java</sonar.coverage.exclusions>
             </properties>
         </profile>
     </profiles>
+
 </project>

@@ -1,4 +1,4 @@
-package forest.detector.entity;
+package forest.detector.utils;
 
 
 public class PasswordHashing {
@@ -28,7 +28,7 @@ public class PasswordHashing {
 
     public String getHash(String userString ) {
 
-        int lengthHash = 60;
+        int lengthHash = 15;
         String result = "";
 
         if (lengthHash > 3)
