@@ -23,47 +23,33 @@ public class LoginController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
         PrintWriter writer = response.getWriter();
-        HttpSession session = request.getSession(false);
-//        String role = (String) session.getAttribute("role");
+        HttpSession session = request.getSession();
+        String role = (String) session.getAttribute("role");
 
         String html = "<html><body>";
 
-        if(session == null){
-            html+=  "<form method ='post' action='/login'>"+
-                    "<center>"+
-                    "<h1>Enter login and password</h1>"+
-                    "<div class ='input-form'>"+
-                    "<input type='text' name ='email' placeholder='Email'>"+
-                    "</div>"+
-                    "<div class ='input-form'>"+
-                    "<input type='password' name ='password' placeholder='Password'>"+
-                    "</div>"+
-                    "<div class ='input-form'>"+
-                    "<input type='submit' value='Enter'><br><br>"+
-                    "</div>"+
-                    "<a class='href' href='/registration'>registration</a>"+
-                    "</center>"+
+        if(role == null) {
+            html += "<form method ='post' action='/login'>" +
+                    "<center>" +
+                    "<h1>Enter login and password</h1>" +
+                    "<div class ='input-form'>" +
+                    "<input type='text' name ='email' placeholder='Email'>" +
+                    "</div>" +
+                    "<div class ='input-form'>" +
+                    "<input type='password' name ='password' placeholder='Password'>" +
+                    "</div>" +
+                    "<div class ='input-form'>" +
+                    "<input type='submit' value='Enter'><br><br>" +
+                    "</div>" +
+                    "<a class='href' href='/registration'>registration</a>" +
+                    "</center>" +
                     "</form></body></html>";
 
-        }else{
-
-            html +="<h1>HELLO"+ session.getAttribute("role") +"</h1>" +
-                    "</body></html>";
-
+        }else if(role.equals("admin")){
+            response.sendRedirect("/admin");
+        }else if(role.equals("user")){
+            response.sendRedirect("/template");
         }
-//        else{
-////            html += "<form method='get' action='/logout'>" +
-////                    "<input type='submit' value='Logout'>" +
-////                    "</form></body></html>";
-//
-//            if(role == "admin"){
-//                response.sendRedirect(request.getContextPath()+ "/admin");
-//            } else if(role == "user"){
-//                html+="HELLO USER" +
-//                        "</body></html>";
-//            }
-//
-//        }
 
         writer.println(html);
     }
@@ -71,7 +57,7 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
         PrintWriter writer = response.getWriter();
-        HttpSession session = request.getSession();
+
 
         if (userService == null) {
             userService = new UserService((DataSource) request.getServletContext().getAttribute("datasource"));
@@ -85,6 +71,7 @@ public class LoginController extends HttpServlet {
             User user = new User();
             user.setEmail(email);
             user.setPassword(password);
+            HttpSession session = request.getSession();
 
             try
             {
@@ -92,42 +79,36 @@ public class LoginController extends HttpServlet {
 
                 if(userValidate.equals("Admin_Role"))
                 {
-                    //writer.println("Admin's Home");   //here must be admin page
-
-                     //Creating a session
+                   // HttpSession session = request.getSession();
                     session.setAttribute("email", email); //setting session attribute
                     session.setAttribute("role", userService.getUserByEmail(email).getRole());
-                    request.setAttribute("email", email);
-
+                    //request.setAttribute("email", email);
                     response.sendRedirect("/admin");
                 }
                 else if(userValidate.equals("Moderator-api"))
                 {
-                    writer.println("Moderator-api");  //here must be Moderator-api page
-
 //                    HttpSession session = request.getSession();
                     session.setAttribute("email", email);
                     session.setAttribute("role",  userService.getUserByEmail(email).getRole());
-                    request.setAttribute("email", email);
+                   // request.setAttribute("email", email);
+                    response.sendRedirect("/template");
                 }
                 else if(userValidate.equals("Moderator-gui"))
                 {
-                    writer.println("Moderator-gui");   //here must be Moderator-gui page
-
 //                    HttpSession session = request.getSession();
                     session.setAttribute("email", email);
                     session.setAttribute("role",  userService.getUserByEmail(email).getRole());
-                    request.setAttribute("email", email);
+                   // request.setAttribute("email", email);
+                    response.sendRedirect("/template");
                 }
                 else if(userValidate.equals("User"))
                 {
-                    writer.println("User");   //here must be user page
-
 //                    HttpSession session = request.getSession();
                     session.setMaxInactiveInterval(10*60);
                     session.setAttribute("email", email);
                     session.setAttribute("role",  userService.getUserByEmail(email).getRole());
-                    request.setAttribute("email", email);
+                    //request.setAttribute("email", email);
+                    response.sendRedirect("/template");
                 }
                 else
                 {

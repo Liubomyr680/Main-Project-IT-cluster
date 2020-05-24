@@ -17,16 +17,19 @@ public class UserRepository {
     public User getUserByEmail(String email) {
         User user = null;
 
-        String users_query = "SELECT email, password, first_name, last_name FROM users " +
-                "WHERE email='" + email + "'";
+//        String users_query = "SELECT users.email, users.password, users.first_name, users.last_name, user_roles.role_name FROM users, user_roles " +
+//                "WHERE users.email='" + email + "', user_roles.email='"+ email +"'";
 
-        String role_query = "SELECT email, password, first_name, last_name FROM user_roles " +
-                "WHERE email='" + email + "'";
+//        String users_query = "SELECT users.email, users.password, users.first_name, users.last_name, user_roles.role_name FROM users, user_roles " +
+//                "WHERE users.email=user_roles.email='" + email + "'";
+
+        String users_query = "SELECT users.email, users.password, users.first_name, users.last_name, user_roles.role_name FROM users, user_roles " +
+                "WHERE user_roles.email='" + email + "'";
+
         try (
                 Connection connection = dataSource.getConnection();
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(users_query);
-                ResultSet resultSet2 = statement.executeQuery(role_query);
         ) {
             if (resultSet.next()) {
                 user = new User(
@@ -34,7 +37,7 @@ public class UserRepository {
                         resultSet.getString("password"),
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
-                        resultSet2.getString("role")
+                        resultSet.getString("role_name")
                         );
             }
 

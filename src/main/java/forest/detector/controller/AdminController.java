@@ -16,17 +16,20 @@ import java.io.PrintWriter;
 @WebServlet(name ="admin", urlPatterns = "/admin")
 public class AdminController extends HttpServlet {
 
-    //private UserRepository userRepository;
     private UserService userService;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter writer = response.getWriter();
         String html = "<html><body>";
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
+        String role = (String) session.getAttribute("role");
 
-
-        if(session != null){
+        if(role == null)
+            response.sendRedirect("/login");
+        else if(role.equals("user"))
+            response.sendRedirect("/template");
+       else if(role.equals("admin")){
             html += "<fieldset>\n" +
                     "<form method=\"post\" action=\"admin\">\n" +
                     "<label>Email for list:</label><br/>\n" +
@@ -46,8 +49,6 @@ public class AdminController extends HttpServlet {
                     "</form>"+
                     "</fieldset>\n" +
                     "</body></html>";
-        }else{
-            response.sendRedirect("/login");
         }
 
         writer.println(html);
