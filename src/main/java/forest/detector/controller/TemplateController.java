@@ -1,5 +1,6 @@
 package forest.detector.controller;
 
+import j2html.TagCreator;
 import j2html.tags.ContainerTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ public class TemplateController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_OK);
+
         ContainerTag homeHtml = html(HEAD,
                 body(
                         NAV,

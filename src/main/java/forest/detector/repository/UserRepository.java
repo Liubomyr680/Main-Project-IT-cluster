@@ -88,24 +88,26 @@ public class UserRepository {
 
         String userNameDB = "";
         String roleDB = "";
+        String passwordDB = "";
 
         try(Connection con = dataSource.getConnection())
         {
             Statement statement = con.createStatement();
-            ResultSet resultSet = statement.executeQuery("select email, role_name from user_roles");
+            ResultSet resultSet = statement.executeQuery("select users.password, user_roles.email, user_roles.role_name from users, user_roles");
 
             while(resultSet.next())
             {
                 userNameDB = resultSet.getString("email");
                 roleDB = resultSet.getString("role_name");
+                passwordDB = resultSet.getString("password");
 
-                if(mail.equals(userNameDB) && roleDB.equals("admin"))
+                if(mail.equals(userNameDB) && roleDB.equals("admin") && passwordDB.equals(pass))
                     return "Admin_Role";
-                else if(mail.equals(userNameDB) && roleDB.equals("moderator-api"))
+                else if(mail.equals(userNameDB) && roleDB.equals("moderator-api") && passwordDB.equals(pass))
                     return "Moderator-api";
-                else if(mail.equals(userNameDB) && roleDB.equals("moderator-gui"))
+                else if(mail.equals(userNameDB) && roleDB.equals("moderator-gui") && passwordDB.equals(pass))
                     return "Moderator-gui";
-                else if(mail.equals(userNameDB) && roleDB.equals("user"))
+                else if(mail.equals(userNameDB) && roleDB.equals("user") && passwordDB.equals(pass))
                     return "User";
             }
         }

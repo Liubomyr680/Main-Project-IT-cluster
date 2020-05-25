@@ -63,4 +63,119 @@ public class HTMLTemplates {
                     ).withClasses("row")
             ).withClasses("container")
     ).withId("main-footer").withClasses("bg-dark");
+
+    public static final ContainerTag GRAPH = div(
+            div(
+                    div(
+                            div(
+                                    i().withClass("fas fa-chart-area mr-1"),
+                                    text("Area Chart Example")
+                            ).withClass("card-header"),
+                            div(
+                                    canvas().withId("myAreaChart").attr("width","100%")
+                                            .attr("height","40")
+                            ).withClass("card-body")
+
+                    ).withClass("card mb-4")
+            ).withClass("col-xl-6 full"),
+            div(
+                    div(
+                            div(
+                                    i().withClass("fas fa-chart-bar mr-1"),
+                                    text("Bar Chart Example")).withClass("card-header"),
+                            div(
+                                    canvas().withId("myBarChart")
+                                            .attr("width","100%")
+                                            .attr("height","40")
+
+                            ).withClass("card-body")
+
+                    ).withClass("card mb-4")
+            ).withClass("col-xl-6"),
+            div(
+                    div(
+                            div(
+                                    i().withClass("fas fa-chart-pie mr-1"),
+                                    text("Pie Chart Example")).withClass("card-header"),
+                            div(
+                                    canvas().withId("myPieChart")
+                                            .attr("width","100%")
+                                            .attr("height","40")
+
+                            ).withClass("card-body")
+
+                    ).withClass("card mb-4")
+            ).withClass("col-xl-6")
+    ).withClass("row");
+
+    public static final ContainerTag TABLE = div(
+            div(i().withClass("fas fa-table mr-1"),text("DataTable Example")
+            ).withClass("card-header"),
+            div(
+                    div(
+
+                            table(
+                                    thead(
+                                            tr(
+                                                    th("Number"),
+                                                    th("Region"),
+                                                    th("Forest user"),
+                                                    th("Start date"),
+                                                    th("Finish date"),
+                                                    th("Forestry"),
+                                                    th("Cutting type"),
+                                                    th("Ticket status"),
+                                                    th("Cutting status")
+                                            )
+
+                                    ),
+                                    tfoot(
+                                            tr(
+                                                    th("Number"),
+                                                    th("Region"),
+                                                    th("Forest user"),
+                                                    th("Start date"),
+                                                    th("Finish date"),
+                                                    th("Forestry"),
+                                                    th("Cutting type"),
+                                                    th("Ticket status"),
+                                                    th("Cutting status")
+                                            )
+
+                                    ),
+                                    tbody(
+                                            tr(
+                                                    th("45645645"),
+                                                    th("IF"),
+                                                    th("Admin"),
+                                                    th("22.05.2020"),
+                                                    th("22.05.2020"),
+                                                    th("N/A"),
+                                                    th("N/A"),
+                                                    th("Ok"),
+                                                    th("Ok")
+                                            ),
+                                            tr(
+                                                    th("45645645"),
+                                                    th("IF"),
+                                                    th("Admin"),
+                                                    th("22.05.2020"),
+                                                    th("22.05.2020"),
+                                                    th("N/A"),
+                                                    th("N/A"),
+                                                    th("Ok"),
+                                                    th("Ok")
+                                            )
+                                    )
+
+
+                            ).withClass("table table-bordered")
+                                    .withId("dataTable").attr("width","100%")
+                                    .attr("cellspacing","0")
+
+                    ).withClass("table-responsive")
+
+            ).withClass("card-body")
+
+    ).withClass("card mb-4");
 }

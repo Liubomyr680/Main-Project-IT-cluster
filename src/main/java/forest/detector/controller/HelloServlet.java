@@ -1,5 +1,4 @@
 package forest.detector.controller;
-
 import forest.detector.service.HelloService;
 
 import java.io.IOException;
@@ -23,5 +22,5 @@ public class HelloServlet extends HttpServlet {
         out.flush();
         out.close();
     }
-    
+
 }
