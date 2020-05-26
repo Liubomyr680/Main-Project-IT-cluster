@@ -1,6 +1,9 @@
 package forest.detector.controller;
 
+import forest.detector.entity.User;
+import forest.detector.service.UserService;
 import j2html.tags.ContainerTag;
+import j2html.tags.DomContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +11,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static forest.detector.utils.AdminTemplates.*;
 import static forest.detector.utils.AdminTemplates.FOOTER;
@@ -18,6 +24,7 @@ import static j2html.TagCreator.th;
 public class UserManagement extends HttpServlet {
 
     private static Logger log = LoggerFactory.getLogger(TemplateController.class);
+    private UserService userService;
 
     /**
      * <script src="https://kit.fontawesome.com/aac0f778d8.js" crossorigin="anonymous"></script>
@@ -27,6 +34,13 @@ public class UserManagement extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_OK);
+
+        if (userService == null) {
+            userService = new UserService((DataSource) request.getServletContext().getAttribute("datasource"));
+        }
+
+        List<User> list = userService.getUsers();
+
         ContainerTag homeHtml = html(
                 title("User Management"),
                 link().withHref("/css/user-management.css").withRel("stylesheet"),
@@ -73,21 +87,21 @@ public class UserManagement extends HttpServlet {
                                                                                                             th("Action")
                                                                                                     )
                                                                                             ),
-                                                                                                tfoot(
-                                                                                                        th("#"),
-                                                                                                        th("Name"),
-                                                                                                        th("Date Created"),
-                                                                                                        th("Role"),
-                                                                                                        th("Status"),
-                                                                                                        th("Action")
-                                                                                                ),
+
                                                                                                 tbody(
                                                                                                         tr(
-                                                                                                                td("1"),
-                                                                                                                td("Did pixto"),
-                                                                                                                td("22/05/2020"),
-                                                                                                                td("Admin"),
-                                                                                                                td("Online"),
+//                                                                                                                td("1"),
+//                                                                                                                td("Did pixto"),
+//                                                                                                                td("22/05/2020"),
+//                                                                                                                td("Admin"),
+//                                                                                                                td("Online"),
+
+//                                                                                                                each(list, user ->
+//                                                                                                                        div(attrs(".user"),
+//                                                                                                                                td(user.getEmail()),
+//                                                                                                                                td(user.getPassword()),
+//                                                                                                                                td(user.getFirstName()),
+//                                                                                                                                td(user.getLastName()),
                                                                                                                 td(
                                                                                                                         a(i("\uE8B8").withClass("material-icons"))
                                                                                                                                 .withHref("#")
@@ -106,7 +120,7 @@ public class UserManagement extends HttpServlet {
                                                                                                 .attr("width","100%")
                                                                                                 .attr("cellspacing","0")
                                                                                 ).withClass("table-responsive")
-                                                                        ).withClass("card-body")
+                                                                                        ).withClass("card-body")
                                                                 ).withClass("table-wrapper")
                                                         ).withClass("container")
 

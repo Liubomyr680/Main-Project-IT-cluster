@@ -4,6 +4,7 @@ import forest.detector.entity.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository {
@@ -119,15 +120,24 @@ public class UserRepository {
     }
 
     public List<User> getUsers() {
+        List<User> list = new ArrayList<>();
+
         try(Connection con = dataSource.getConnection()) {
             // test connection here
             PreparedStatement ps = con.prepareStatement("select * from users");
             ResultSet rs = ps.executeQuery();
 
+            while(rs.next()){
+                list.add(new User(rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name")));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return List.of(new User());
+        return list;
     }
 
     public boolean checkUser(String username, String passwd) {
